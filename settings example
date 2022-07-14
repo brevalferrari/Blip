@@ -1,0 +1,70 @@
+Hi!
+    Before we start, please know that every parametter listed here is necessary. Removing one will remove a key from a dictionnary and trigger a KeyError. Also, please do not include spaces or linebreaks: they should only be used for readability.
+    You can write basically anything anywhere as long as it doesn't start with a known parametter.
+    Specify below how you would like to write notes. They are written from bass to treble, the first one will be used as the base for tuning.
+    You can have any number of notes you want, their frequency will be equally distributed.
+    For the settings, try to clean them and don't include special characters please because Python don't like that.
+
+notes=A,A#,B,C,C#,D,D#,E,F,F#,G,G#
+
+    Then, you also want to specify how to recognize other notes that give the same pitches as the notes above. Each note will be replaced by the interpreter using the same index as the notes above. For example, Cb is actually just the pitch of B, so why would we care when listening to it?
+
+&also=A,Bb,Cb,B#,Db,D,Eb,Fb,E#,Gb,G,Ab
+rest=:
+lengh=l
+longer=-
+
+    When choosing a lengh, a higher value will mean faster notes: an l1 will last four l4, an l2 is two l4 etc.
+    We still need to switch octaves:
+
+octave=o%
+up=>
+down=<
+    Remember that you can still call octaves for a single note the MML way, by placing the octave after the note (A3, B2...).
+    Now, the special effects. Let's start with sound. You probably noticed the "%" above, that's the placeholder for the octave value. For a crescendo, you need more info like the duration ("%d"), initial volume ("%s" like "start") and the last volume ("%e" like "end").
+
+volume=v%
+more=^
+less=_
+crescendo=c%d,%s-%e
+
+    Sometimes you want the notes to be sliding to each other or separated by some silence. These effects are easy to implement and will be written between notes (A-B-C.D.E). The time that the sliding takes before the next note is precised with the parametter "stime" in the same unit as the lengh. Same unit for dtime, the time spent between notes. The pizzicato time however is in miliseconds to be more precise.
+
+slide=~
+stime=s%
+detach=.
+dtime=d%
+pizz='
+ptime=p%
+
+    Channels are monophonic, so you need multiple channels to make chords. The number of channels is unlimited. They are recognized by a digit and start with 1, channel 0 is used for tempi modifications.
+
+channel=@%
+endchannel=end
+
+    Comments can be written anywhere outside channels. When you want to use comments inside a channel, use this :
+
+singlelinecomment=$
+multilinecomment=---%---
+
+    Loops and tuplets. Tuplets are encapsulated and everything inside is played at the current lengh.
+
+loop=(%)
+tupplet=[%]
+
+    The global section, inspired from BeepComp, gives info like the BPM for all channels and settings used.
+
+globalsection=!
+BPM=bpm/%/
+BPMvalues=t%
+
+    This mapping section has the same inner structure as channels and have loops, tuplets (why???) as well as rests that do nothing. The values will be communicated via channel 0. If you only want one value with this syntax, say 120 BPM, just write "bpm/t120/".
+    Now, let's take a look at drums. A channel will be treated differently if it's not named with a digit but with this symbol:
+
+drumsection=D
+
+    Then, custom instruments are indentified by a name. Its index will be sent to the sound processor. The rest is just like another channel.
+
+instruments=k,K,h,H,s,S
+
+    You're done! You can start composing or arranging. This file can be saved with any name you like as long as it's included in the beggining of your blip file.
