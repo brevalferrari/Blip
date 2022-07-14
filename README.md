@@ -6,4 +6,5 @@ The interpreter will be written in Python, but the score and settings will be ke
 I also want the sound design to be made on Pure-Data and will do something to link the two together with MIDI events. But I'll probably stick to my Python friends Pygame and Numpy for simple sine waves first.  
 
 Prototype coming soon!  
-![image](https://user-images.githubusercontent.com/74506708/178852638-bbc1c844-58e9-47c5-a000-8ad65ca69253.png)
+![image](https://user-images.githubusercontent.com/74506708/178852638-bbc1c844-58e9-47c5-a000-8ad65ca69253.png)  
+![image](https://user-images.githubusercontent.com/74506708/179050622-f51ecae8-44a3-467b-8a94-e7b00ffb4b29.png)
