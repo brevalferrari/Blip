@@ -29,10 +29,10 @@ m=False# block match with known keyword
 while F:
     if F[:b]==d['channel'].split('%')[0]:
         m=True
-        c=spot(['globalsection','drumsection'],F[b:],True)
+        c=spot(['global section','drum section'],F[b:],True)
         b+=len(c)
-        if c==d['globalsection']:print('global')
-        elif c==d['drumsection']:print('drum')
+        if c==d['global section']:print('global')
+        elif c==d['drum section']:print('drum')
         else:print(f'channel {c}')
     F=F[b if m else 1:]
     b=len(d['channel'].split('%')[0])
