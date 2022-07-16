@@ -21,12 +21,12 @@ octave=o%
 up=>
 down=<
     Remember that you can still call octaves for a single note the MML way, by placing the octave after the note (A3, B2...).
-    Now, the special effects. Let's start with sound. You probably noticed the "%" above, that's the placeholder for the octave value. For a crescendo, you need more info like the duration ("%d"), initial volume ("%s" like "start") and the last volume ("%e" like "end").
+    Now, the special effects. Let's start with sound. You probably noticed the "%" above, that's the placeholder for the octave value.
 
 volume=v%
 more=^
 less=_
-crescendo=c%d,%s-%e
+volume step=V%
 
     Sometimes you want the notes to be sliding to each other or separated by some silence. These effects are easy to implement and will be written between notes (A-B-C.D.E). The time that the sliding takes before the next note is in the same unit as the lengh. Same unit for detached time, the time spent between notes. The pizzicato time however is in miliseconds to be more precise.
 
@@ -39,13 +39,11 @@ pizz time=p%
 
     Channels are monophonic, so you need multiple channels to make chords. The number of channels is unlimited. They are recognized by a digit and start with 1, channel 0 is used for tempi modifications.
 
-channel=@%
-end channel=end
+channel=@%:
 
-    Comments can be written anywhere outside channels. When you want to use comments inside a channel, use this :
+    Comments can be written anywhere with this :
 
-single-line comment=$
-multi-line comment=---%---
+comment=$
 
     Loops and tuplets. Tuplets are encapsulated and everything inside is played at the current lengh.
 
@@ -55,7 +53,6 @@ tupplet=[%]
     The global section, inspired from BeepComp, gives info like the BPM for all channels and settings used.
 
 global section=!
-BPM=bpm/%/
 BPM values=t%
 
     This mapping section has the same inner structure as channels and have loops, tuplets (why???) as well as rests that do nothing. The values will be communicated via channel 0. If you only want one value with this syntax, say 120 BPM, just write "bpm/t120/".

@@ -28,25 +28,26 @@ def spot(possibilities,text,canbedigit=False):
             if not text[i].isdigit():return text[:i]
             i+=1
 with open('example','rb') as f:
-    F=f.read().decode('utf-8','replace').splitlines()
-d=dico(F.pop(0))# dict of found settings
+    FI=f.read().decode('utf-8','replace').splitlines()
+d=dico(FI.pop(0))# dict of found settings
+F=''
+for l in FI:
+    if not l.startswith(d['comment']):F+=l
+trans={
+    d['channel'].split('%')[0]:'\nif not channels in locals():channels=list()\n\
+        if liste in locals():channels.append(liste)\nliste=list()\n\
+        lengh=4\noctave=4\nvolume=50\nvolume_step=10\n\
+        list.append(',
+    d['global section']:'"g"',
+    d['drum section']:'"d"',
+    d['channel'].split('%')[1]:')',
+    d['lengh']:'\nlengh=',
+    d['octave']:'\noctave=',
+    d['up']:'\noctave+=1',
+    d['down']:'\noctave-=1',
+    d['volume']:'\nvolume=',
+    d['more']:'\volume+=volume_step',
+}
+
 print(d)
-F=''.join(F).replace(' ','')# compact rest of file
-print(F)
-b=len(d['channel'].split('%')[0])# block size
-m=False# block match with known keyword
-g=False# global section already encountered
-while F:
-    if F[:b]==d['channel'].split('%')[0]:
-        m=True
-        c=spot(['global section'*(not g),'drum section'],F[b:],True)
-        b+=len(c)
-        if (not g) and c==d['global section']:
-            g=True
-            print("We're now in the global section.")
-        elif c==d['drum section']:
-            print('drum')
-        else:print(f'channel {c}')
-    F=F[b if m else 1:]
-    b=len(d['channel'].split('%')[0])
-    m=False
+print(F.translate(F.maketrans(trans)))
