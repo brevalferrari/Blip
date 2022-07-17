@@ -2,7 +2,7 @@ with open('example','rb') as f:FI=f.read().decode('utf-8','replace').splitlines(
 d={}# dict of found settings
 with open(FI.pop(0),'rb') as f:
     for l in f.read().decode('utf-8','replace').splitlines():
-        if '=' in l:d.__setitem__(*l.split('='))
+        if '=' in l:d.__setitem__(l.split('=')[0],''.join(l.split('=')[1:]))
 for k in ['notes','&also','instruments']:
     if k in d:d[k]=d[k].split(',')
 F=''
@@ -10,6 +10,7 @@ for l in FI:
     if not l.startswith(d['comment']):F+=l.replace(' ','')
 
 i=0
+channels=[]
 matches=['channel']
 matchhistory=[]
 # MODES
@@ -28,6 +29,7 @@ class digitchoice:
 # EMBED SOLUTION IN MATCHES LIST
 digits=0
 d[digits]=digitchoice()
+digitdump=''
 
 while i<len(F):
     substring+=F[i]
@@ -36,16 +38,24 @@ while i<len(F):
         if d[k].startswith(substring):match.append(k)
     if len(match)==1:
         match=match[0]
-        if title:pass
+        if title:
+            if match==digits:digitdump=substring
         elif innerDrum:pass
         elif innerGlobal:pass
         elif innerNotes:pass
-        else:print(substring)
+        else:
+            print("channel ",end='')
+            title=True
+            matches=['global section','drum section',digits]
         substring=''
         matchhistory=[]
     elif not len(match):
-        if matchhistory:print('/!\\ Warning: conflict between matches '+str(matchhistory[-1]))
+        if digitdump:
+            i-=1
+            channels=
+        elif matchhistory:print('/!\\ Warning: conflict between matches '+str(matchhistory[-1]))
         else:matchhistory=[]
     else:matchhistory.append(match)
     i+=1
 print(d)
+print(F)
