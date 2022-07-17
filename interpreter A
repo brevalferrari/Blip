@@ -49,11 +49,14 @@ substring=''
 while i<len(F):
     substring+=F[i]
     match=[]
-    print('{:7}{:<5}{:<2}{}'.format('drum'*innerDrum+'global'*innerGlobal+'title'*title+'notes'*innerNotes,i,F[i],substring))
+    print('{:7}{:<5}{:<2}{:<8}{:<5}{}'.format('drum'*innerDrum+'global'*innerGlobal+'title'*title+'notes'*innerNotes,i,F[i],substring,digitdump,matches))
     for k in matches:
         if d[k].startswith(substring):match.append(k)
     if len(match)==1:
         match=match[0]
+        if match!=digits and substring!=d[match]:
+            i+=1
+            continue
         if title:
             if match==digits:digitdump=substring# the rest is done in the 'no match' if section
             else:
@@ -67,6 +70,7 @@ while i<len(F):
             elif match=='channel':
                 i-=1
                 innerGlobal,matches=False,defaultmatches['outer']
+            else:digitdump+=substring
         elif innerNotes:pass
         else:title,matches=True,defaultmatches['title']
         substring=''
@@ -74,12 +78,16 @@ while i<len(F):
     elif not len(match):
         if digitdump:
             i-=1
-            if title:channels.append([digitdump])
-            elif innerGlobal:BPM=int(digitdump)
+            if title:channels[-1].append([digitdump])
+            elif innerGlobal:
+                BPM=int(digitdump)
+                matches=defaultmatches['innerGlobal']
             digitdump=''
         elif matchhistory:print('/!\\ Warning: conflict between matches '+str(matchhistory[-1]))
-        else:matchhistory=[]
+        substring=''
+        matchhistory=[]
     else:matchhistory.append(match)
     i+=1
 print(d)
 print(channels)
+print(BPM)

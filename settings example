@@ -17,29 +17,29 @@ longer=-
     When choosing a lengh, a higher value will mean faster notes: an l1 will last four l4, an l2 is two l4 etc.
     We still need to switch octaves:
 
-octave=o%
+octave=o
 up=>
 down=<
     Remember that you can still call octaves for a single note the MML way, by placing the octave after the note (A3, B2...).
     Now, the special effects. Let's start with sound. You probably noticed the "%" above, that's the placeholder for the octave value.
 
-volume=v%
+volume=v
 more=^
 less=_
-volume step=V%
+volume step=V
 
     Sometimes you want the notes to be sliding to each other or separated by some silence. These effects are easy to implement and will be written between notes (A-B-C.D.E). The time that the sliding takes before the next note is in the same unit as the lengh. Same unit for detached time, the time spent between notes. The pizzicato time however is in miliseconds to be more precise.
 
 slide=~
-sliding time=s%
+sliding time=s
 detach=.
-detached time=d%
+detached time=d
 pizz='
-pizz time=p%
+pizz time=p
 
     Channels are monophonic, so you need multiple channels to make chords. The number of channels is unlimited. They are recognized by a digit and start with 1, channel 0 is used for tempi modifications.
 
-channel=@%:
+channel=@
 
     Comments can be written anywhere with this :
 
@@ -53,7 +53,7 @@ tupplet=[%]
     The global section, inspired from BeepComp, gives info like the BPM for all channels and settings used.
 
 global section=!
-BPM=BPM=%
+BPM=BPM=
 
     Now, let's take a look at drums. A channel will be treated differently if it's not named with a digit but with this symbol:
 
