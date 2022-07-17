@@ -49,7 +49,7 @@ substring=''
 while i<len(F):
     substring+=F[i]
     match=[]
-    print('{:7}{:<5}{:<2}{:<8}{:<5}{}'.format('drum'*innerDrum+'global'*innerGlobal+'title'*title+'notes'*innerNotes,i,F[i],substring,digitdump,matches))
+    print('{:7}{:<5}{:<2}{:<8}{:<5}'.format('drum'*innerDrum+'global'*innerGlobal+'title'*title+'notes'*innerNotes,i,F[i],substring,digitdump))
     for k in matches:
         if d[k].startswith(substring):match.append(k)
     if len(match)==1:
@@ -78,7 +78,10 @@ while i<len(F):
     elif not len(match):
         if digitdump:
             i-=1
-            if title:channels[-1].append([digitdump])
+            if title:
+                channels[-1].append([digitdump])
+                title=False
+                innerNotes,matches=True,defaultmatches['innerNotes']
             elif innerGlobal:
                 BPM=int(digitdump)
                 matches=defaultmatches['innerGlobal']
