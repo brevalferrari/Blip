@@ -54,8 +54,11 @@ tupplet=[%]
 
 global section=!
 BPM values=t%
+faster=+
+slower=-
+step=1
 
-    This mapping section has the same inner structure as channels and have loops, tuplets (why???) as well as rests that do nothing. The values will be communicated via channel 0. If you only want one value with this syntax, say 120 BPM, just write "bpm/t120/".
+    This mapping section has the same inner structure as channels and have loops, tuplets (why???) as well as rests that do nothing. The values will be communicated via channel 0. If you only want one value with this syntax, say 120 BPM, just write "t120".
     Now, let's take a look at drums. A channel will be treated differently if it's not named with a digit but with this symbol:
 
 drum section=D

@@ -1,5 +1,5 @@
 settings example
-@! bpm/t120/
+@! t120
 
 $ Let's start channel 1:
 @1: l4 o4 CCCD l2 ED l4 CEDD l1 C
