@@ -3,15 +3,41 @@ d={}# dict of found settings
 with open(FI.pop(0),'rb') as f:
     for l in f.read().decode('utf-8','replace').splitlines():
         if '=' in l:d.__setitem__(l.split('=')[0],''.join(l.split('=')[1:]))
-for k in ['notes','&also','instruments']:
-    if k in d:d[k]=d[k].split(',')
+for i,k in enumerate(['notes','&also','instruments']):
+    if k in d:
+        for j,l in enumerate(d[k].split(',')):d[str(i)+str(j)]=l
+        del d[k]
 F=''
 for l in FI:
     if not l.startswith(d['comment']):F+=l.replace(' ','')
+def notefields(dictionnary,group) -> list:
+    out=[]
+    for k in dictionnary:
+        if k.startswith(str(group)):out.append(k)
+    return out
+class digitchoice:
+    def startswith(self,match):
+        for c in match:
+            if not c.isdigit():return 0
+        return 1
+# EMBED SOLUTION IN MATCHES LIST (it's a placeholder to check for digits)
+digits='digits'
+d[digits]=digitchoice()
+digitdump=''
 
 i=0
 channels=[]
-matches=['channel']
+BPM=60
+lengh=octave=4
+defaultmatches={
+    'outer':['channel'],
+    'title':['global section','drum section',digits],
+    'innerDrum':[*notefields(d,2),'rest','lengh','longer','volume','more','less','volume step','detach','detached time','pizz','pizz time','channel','loop','tupplet'],
+    'innerGlobal':['BPM','channel'],
+    'innerNotes':[*notefields(d,0),*notefields(d,1),'rest','lengh','longer','octave','up','down','volume','more','less','volume step','slide','sliding time','detach','detached time','pizz','pizz time','channel','loop','tupplet']
+}
+for k in defaultmatches:defaultmatches[k].append('comment')# things you find everywhere
+matches=defaultmatches['outer']
 matchhistory=[]
 # MODES
 title=False
@@ -20,42 +46,40 @@ innerGlobal=False
 innerNotes=False
 substring=''
 
-class digitchoice:
-    def startswith(self,match):
-        for c in match:
-            if not c.isdigit():return 0
-        return 1
-
-# EMBED SOLUTION IN MATCHES LIST
-digits=0
-d[digits]=digitchoice()
-digitdump=''
-
 while i<len(F):
     substring+=F[i]
     match=[]
+    print('{:7}{:<5}{:<2}{}'.format('drum'*innerDrum+'global'*innerGlobal+'title'*title+'notes'*innerNotes,i,F[i],substring))
     for k in matches:
         if d[k].startswith(substring):match.append(k)
     if len(match)==1:
         match=match[0]
         if title:
-            if match==digits:digitdump=substring
+            if match==digits:digitdump=substring# the rest is done in the 'no match' if section
+            else:
+                channels.append([match])
+                title=False
+                if match=='global section':innerGlobal,matches=True,defaultmatches['innerGlobal']
+                else:innerDrum,matches=True,defaultmatches['innerDrum']
         elif innerDrum:pass
-        elif innerGlobal:pass
+        elif innerGlobal:
+            if match=='BPM':matches=[digits]# the rest is done in the 'no match' if section
+            elif match=='channel':
+                i-=1
+                innerGlobal,matches=False,defaultmatches['outer']
         elif innerNotes:pass
-        else:
-            print("channel ",end='')
-            title=True
-            matches=['global section','drum section',digits]
+        else:title,matches=True,defaultmatches['title']
         substring=''
         matchhistory=[]
     elif not len(match):
         if digitdump:
             i-=1
-            channels=
+            if title:channels.append([digitdump])
+            elif innerGlobal:BPM=int(digitdump)
+            digitdump=''
         elif matchhistory:print('/!\\ Warning: conflict between matches '+str(matchhistory[-1]))
         else:matchhistory=[]
     else:matchhistory.append(match)
     i+=1
 print(d)
-print(F)
+print(channels)
