@@ -1,5 +1,5 @@
 Hi!
-    Before we start, please know that every parametter listed here is necessary. Removing one will remove a key from a dictionnary and trigger a KeyError. Also, please do not include spaces or linebreaks: they should only be used for readability.
+    Before we start, please know that every parametter listed here is necessary. Removing one will remove a key from a dictionnary and trigger a KeyError. Also, please do not include linebreaks. Note that you can include spaces here, but they won't matter. Use them for readability here and / or in the main file.
     You can write basically anything anywhere as long as it doesn't start with a known parametter.
     Specify below how you would like to write notes. They are written from bass to treble, the first one will be used as the base for tuning.
     You can have any number of notes you want, their frequency will be equally distributed.

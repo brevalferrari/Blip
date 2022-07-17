@@ -1,14 +1,10 @@
-def dico(file):
-    d={}
-    with open(file,'rb') as f:
-        for l in f.read().decode('utf-8','replace').splitlines():
-            if '=' in l:d.__setitem__(*l.split('='))
-    for k in ['notes','&also','instruments']:
-        if k in d:d[k]=d[k].split(',')
-    return d
-with open('example','rb') as f:
-    FI=f.read().decode('utf-8','replace').splitlines()
-d=dico(FI.pop(0))# dict of found settings
+with open('example','rb') as f:FI=f.read().decode('utf-8','replace').splitlines()
+d={}# dict of found settings
+with open(FI.pop(0),'rb') as f:
+    for l in f.read().decode('utf-8','replace').splitlines():
+        if '=' in l:d.__setitem__(*l.split('='))
+for k in ['notes','&also','instruments']:
+    if k in d:d[k]=d[k].split(',')
 F=''
 for l in FI:
     if not l.startswith(d['comment']):F+=l.replace(' ','')
