@@ -30,26 +30,23 @@ channels=[]
 BPM=60
 lengh=octave=4
 defaultmatches={
-    'outer':['channel'],
-    'title':['global section','drum section',digits],
+    'outer':['channel','BPM'],
+    'title':['drum section',digits],
     'innerDrum':[*notefields(d,2),'rest','lengh','longer','volume','more','less','volume step','detach','detached time','pizz','pizz time','channel','loop','tupplet'],
-    'innerGlobal':['BPM','channel'],
     'innerNotes':[*notefields(d,0),*notefields(d,1),'rest','lengh','longer','octave','up','down','volume','more','less','volume step','slide','sliding time','detach','detached time','pizz','pizz time','channel','loop','tupplet']
 }
-for k in defaultmatches:defaultmatches[k].append('comment')# things you find everywhere
 matches=defaultmatches['outer']
 matchhistory=[]
 # MODES
 title=False
 innerDrum=False
-innerGlobal=False
 innerNotes=False
 substring=''
 
 while i<len(F):
     substring+=F[i]
     match=[]
-    print('{:7}{:<5}{:<2}{:<8}{:<5}'.format('drum'*innerDrum+'global'*innerGlobal+'title'*title+'notes'*innerNotes,i,F[i],substring,digitdump))
+    print('{:7}{:<5}{:<2}{:<8}{:<5}'.format('drum'*innerDrum+'title'*title+'notes'*innerNotes,i,F[i],substring,digitdump))
     for k in matches:
         if d[k].startswith(substring):match.append(k)
     if len(match)==1:
@@ -62,34 +59,32 @@ while i<len(F):
             else:
                 channels.append([match])
                 title=False
-                if match=='global section':innerGlobal,matches=True,defaultmatches['innerGlobal']
-                else:innerDrum,matches=True,defaultmatches['innerDrum']
+                innerDrum,matches=True,defaultmatches['innerDrum']
         elif innerDrum:pass
-        elif innerGlobal:
-            if match=='BPM':matches=[digits]# the rest is done in the 'no match' if section
-            elif match=='channel':
-                i-=1
-                innerGlobal,matches=False,defaultmatches['outer']
+        elif innerNotes:
+            print(match)
+        else:# oustide
+            if match=='channel':title,matches=True,defaultmatches['title']
+            elif match=='BPM':matches=[digits]# the rest is done in the 'no match' if section
             else:digitdump+=substring
-        elif innerNotes:pass
-        else:title,matches=True,defaultmatches['title']
         substring=''
         matchhistory=[]
     elif not len(match):
         if digitdump:
             i-=1
             if title:
-                channels[-1].append([digitdump])
+                channels.append([digitdump])
                 title=False
                 innerNotes,matches=True,defaultmatches['innerNotes']
-            elif innerGlobal:
+            else:
                 BPM=int(digitdump)
-                matches=defaultmatches['innerGlobal']
+                matches=defaultmatches['outer']
             digitdump=''
-        elif matchhistory:print('/!\\ Warning: conflict between matches '+str(matchhistory[-1]))
+        elif matchhistory:
+            print(f'/!\\ Warning: conflict between {len(matchhistory[-1])} matches {matchhistory[-1]}')
         substring=''
         matchhistory=[]
-    else:matchhistory.append(match)
+    else:matchhistory.append(list(d[k] for k in match))
     i+=1
 print(d)
 print(channels)

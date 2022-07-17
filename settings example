@@ -50,10 +50,9 @@ comment=$
 loop=(%)
 tupplet=[%]
 
-    The global section, inspired from BeepComp, gives info like the BPM for all channels and settings used.
+    Outside of any channel, at the beggining you can precise the BPM for all channels and settings used.
 
-global section=!
-BPM=BPM=
+BPM=BPM
 
     Now, let's take a look at drums. A channel will be treated differently if it's not named with a digit but with this symbol:
 
