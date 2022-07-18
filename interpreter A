@@ -29,11 +29,16 @@ i=0
 channels=[]
 BPM=60
 lengh=octave=4
+volume=50
+detached_time=32
+pizz_time=100
+volume_step=5
+sliding_time=8
 defaultmatches={
     'outer':['channel','BPM'],
     'title':['drum section',digits],
-    'innerDrum':[*notefields(d,2),'rest','lengh','longer','volume','more','less','volume step','detach','detached time','pizz','pizz time','channel','loop','tupplet'],
-    'innerNotes':[*notefields(d,0),*notefields(d,1),'rest','lengh','longer','octave','up','down','volume','more','less','volume step','slide','sliding time','detach','detached time','pizz','pizz time','channel','loop','tupplet']
+    'innerDrum':[*notefields(d,2),'rest','length','longer','volume','more','less','volume step','detach','detached time','pizz','pizz time','channel','loop','tupplet'],
+    'innerNotes':[*notefields(d,0),*notefields(d,1),'rest','length','longer','octave','up','down','volume','more','less','volume step','slide','sliding time','detach','detached time','pizz','pizz time','channel','loop','tupplet']
 }
 matches=defaultmatches['outer']
 matchhistory=[]
@@ -41,6 +46,7 @@ matchhistory=[]
 title=False
 innerDrum=False
 innerNotes=False
+digitInnerMatch=None# will be set to the match to retrieve digits from the digitsdump string
 substring=''
 
 while i<len(F):
@@ -62,7 +68,10 @@ while i<len(F):
                 innerDrum,matches=True,defaultmatches['innerDrum']
         elif innerDrum:pass
         elif innerNotes:
-            print(match)
+            if match==digits:digitdump=substring
+            elif match in ['length','octave','volume','detached time','pizz time','volume step','sliding time']:matches,digitInnerMatch=[digits],match
+            elif match.isdigit():print([substring,octave,lengh])
+            channels[-1].append(substring)
         else:# oustide
             if match=='channel':title,matches=True,defaultmatches['title']
             elif match=='BPM':matches=[digits]# the rest is done in the 'no match' if section
@@ -76,6 +85,9 @@ while i<len(F):
                 channels.append([digitdump])
                 title=False
                 innerNotes,matches=True,defaultmatches['innerNotes']
+            elif innerNotes:
+                digitInnerMatch.replace(' ','_')
+                exec(digitInnerMatch+'=int(digitdump)')# black magic
             else:
                 BPM=int(digitdump)
                 matches=defaultmatches['outer']

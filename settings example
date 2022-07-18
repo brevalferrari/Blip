@@ -11,7 +11,7 @@ notes=A,A#,B,C,C#,D,D#,E,F,F#,G,G#
 
 &also=A,Bb,Cb,B#,Db,D,Eb,Fb,E#,Gb,G,Ab
 rest=:
-lengh=l
+length=l
 longer=-
 
     When choosing a lengh, a higher value will mean faster notes: an l1 will last four l4, an l2 is two l4 etc.
