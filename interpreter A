@@ -14,12 +14,13 @@ def notefields(dictionnary,group) -> list:
     for k in dictionnary:
         if k.startswith(str(group)):out.append(k)
     return out
-def wrap(note) -> list:return [(int(d['tuning'])*(1 if octave==4 else 2*(4-octave)))*2**(d['notes'].index(note)/len(d['notes'].split(','))),lentgh]
+def wrap(note) -> list:return [(int(d['tuning'])*(1 if octave==4 else 2*(4-octave)))*2**(d['notes'].index(note)/len(d['notes'].split(','))),((4/length)/BPM)*60]
 class digitchoice:
     def startswith(self,match):
         for c in match:
             if not c.isdigit():return 0
         return 1
+class everythingchoice:pass# MAKE A CHOICE THAT MATCHES EVERYTHING (for loops and tuplets to catch everything until the ending character)
 # EMBED SOLUTION IN MATCHES LIST (it's a placeholder to check for digits)
 digits='digits'
 d[digits]=digitchoice()
@@ -28,7 +29,7 @@ digitdump=''
 i=0
 channels=[]
 BPM=60
-lentgh=octave=4
+length=octave=4
 volume=50
 detached_time=32
 pizz_time=100
@@ -87,6 +88,7 @@ while i<len(F):
                 innerNotes,matches=True,defaultmatches['innerNotes']
             elif innerNotes:
                 digitInnerMatch.replace(' ','_')
+                print(f'Changing {digitInnerMatch} to {digitdump}')
                 exec(digitInnerMatch+'=int(digitdump)')# black magic
                 matches=defaultmatches['innerNotes']
             else:
