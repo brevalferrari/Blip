@@ -7,9 +7,10 @@ Hi!
 
 notes=A,A#,B,C,C#,D,D#,E,F,F#,G,G#
 
-    Then, you also want to specify how to recognize other notes that give the same pitches as the notes above. Each note will be replaced by the interpreter using the same index as the notes above. For example, Cb is actually just the pitch of B, so why would we care when listening to it?
+    Then, you also want to specify how to recognize other notes that give the same pitches as the notes above. Each note will be replaced by the interpreter using the same index as the notes above. For example, Cb is actually just the pitch of B, so why would we care when listening to it? There's also a tuning param for the magic formula that calculates frequencies.
 
 &also=A,Bb,Cb,B#,Db,D,Eb,Fb,E#,Gb,G,Ab
+tuning=442
 rest=:
 length=l
 longer=-

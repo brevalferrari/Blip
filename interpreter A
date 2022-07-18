@@ -6,7 +6,6 @@ with open(FI.pop(0),'rb') as f:
 for i,k in enumerate(['notes','&also','instruments']):
     if k in d:
         for j,l in enumerate(d[k].split(',')):d[str(i)+str(j)]=l
-        del d[k]
 F=''
 for l in FI:
     if not l.startswith(d['comment']):F+=l.replace(' ','')
@@ -15,6 +14,7 @@ def notefields(dictionnary,group) -> list:
     for k in dictionnary:
         if k.startswith(str(group)):out.append(k)
     return out
+def wrap(note) -> list:return [(int(d['tuning'])*(1 if octave==4 else 2*(4-octave)))*2**(d['notes'].index(note)/len(d['notes'].split(','))),lentgh]
 class digitchoice:
     def startswith(self,match):
         for c in match:
@@ -28,7 +28,7 @@ digitdump=''
 i=0
 channels=[]
 BPM=60
-lengh=octave=4
+lentgh=octave=4
 volume=50
 detached_time=32
 pizz_time=100
@@ -55,6 +55,7 @@ while i<len(F):
     print('{:7}{:<5}{:<2}{:<8}{:<5}'.format('drum'*innerDrum+'title'*title+'notes'*innerNotes,i,F[i],substring,digitdump))
     for k in matches:
         if d[k].startswith(substring):match.append(k)
+    print(match)
     if len(match)==1:
         match=match[0]
         if match!=digits and substring!=d[match]:
@@ -70,8 +71,7 @@ while i<len(F):
         elif innerNotes:
             if match==digits:digitdump=substring
             elif match in ['length','octave','volume','detached time','pizz time','volume step','sliding time']:matches,digitInnerMatch=[digits],match
-            elif match.isdigit():print([substring,octave,lengh])
-            channels[-1].append(substring)
+            elif match.isdigit():print([substring,octave,lentgh])
         else:# oustide
             if match=='channel':title,matches=True,defaultmatches['title']
             elif match=='BPM':matches=[digits]# the rest is done in the 'no match' if section
@@ -88,16 +88,19 @@ while i<len(F):
             elif innerNotes:
                 digitInnerMatch.replace(' ','_')
                 exec(digitInnerMatch+'=int(digitdump)')# black magic
+                matches=defaultmatches['innerNotes']
             else:
                 BPM=int(digitdump)
                 matches=defaultmatches['outer']
             digitdump=''
         elif matchhistory:
-            print(f'/!\\ Warning: conflict between {len(matchhistory[-1])} matches {matchhistory[-1]}')
+            if min(matchhistory[-1],key=len)==max(matchhistory[-1],key=len):print(f'/!\\ Warning: conflict between {len(matchhistory[-1])} matches {matchhistory[-1]}')
+            else:
+                channels[-1].append(wrap(min(matchhistory[-1],key=len)))
+                i-=1
         substring=''
         matchhistory=[]
     else:matchhistory.append(list(d[k] for k in match))
     i+=1
 print(d)
 print(channels)
-print(BPM)
