@@ -1,3 +1,10 @@
+from numpy import sin,pi,linspace,float32
+from contextlib import redirect_stdout
+with redirect_stdout(None):from pygame.mixer import init,Sound
+from time import sleep
+# T=30
+fs=48000
+# x=linspace(0,T*2*pi,int(T*fs))
 with open('example','rb') as f:FI=f.read().decode('utf-8','replace').splitlines()
 d={}# dict of found settings
 with open(FI.pop(0),'rb') as f:
@@ -9,14 +16,19 @@ for i,k in enumerate(['notes','&also','instruments']):
 F=''
 for l in FI:
     if not l.startswith(d['comment']):F+=l.replace(' ','')
-def notefields(dictionnary,group) -> list:
+def notefields(dictionnary:dict,group:int)->list:
     out=[]
     for k in dictionnary:
         if k.startswith(str(group)):out.append(k)
     return out
-def wrap(note) -> list:return [(int(d['tuning'])*(1 if octave==4 else 2*(4-octave)))*2**(d['notes'].index(note)/len(d['notes'].split(','))),((4/length)/BPM)*60]
+def wrap(note:str)->list:return [Sound((volume*sin(linspace(0,((4/length)/BPM)*60*2*pi,int(((4/length)/BPM)*60*fs))*((int(d['tuning'])*(1 if octave==4 else 2*(4-octave)))*2**(d['notes'].index(note)/len(d['notes'].split(',')))))).astype(float32)),((4/length)/BPM)*60]
+def play():
+    while 1:
+        for n in channels[0][1:]:
+            n[0].play()
+            sleep(n[1])
 class digitchoice:
-    def startswith(self,match):
+    def startswith(self,match:str):
         for c in match:
             if not c.isdigit():return 0
         return 1
@@ -50,6 +62,7 @@ innerNotes=False
 digitInnerMatch=None# will be set to the match to retrieve digits from the digitsdump string
 substring=''
 
+init(frequency=fs,size=32)
 while i<len(F):
     substring+=F[i]
     match=[]
@@ -72,7 +85,7 @@ while i<len(F):
         elif innerNotes:
             if match==digits:digitdump=substring
             elif match in ['length','octave','volume','detached time','pizz time','volume step','sliding time']:matches,digitInnerMatch=[digits],match
-            elif match.isdigit():print([substring,octave,lentgh])
+            elif match.isdigit():print([substring,octave,length])
         else:# oustide
             if match=='channel':title,matches=True,defaultmatches['title']
             elif match=='BPM':matches=[digits]# the rest is done in the 'no match' if section
@@ -104,5 +117,5 @@ while i<len(F):
         matchhistory=[]
     else:matchhistory.append(list(d[k] for k in match))
     i+=1
-print(d)
 print(channels)
+play()
